@@ -1,1 +1,11 @@
-hello, world
+https://www.google.ru/
+https://yandex.ru/
+https://habr.com/
+https://xakep.ru/
+https://stackoverflow.com/
+https://ru.cppreference.com/
+https://www.javascript.com/
+https://webix.com/
+https://golang.org/
+https://revel.github.io/
+https://www.postgresql.org/
