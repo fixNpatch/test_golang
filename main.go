@@ -25,10 +25,11 @@ func (obj Object) appendChar(x string) string {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	log.Print("HTTP Request caught")
 	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
-func main() {
+func ReadWriteHandler() {
 	/* READ FILE */
 	file, err := ioutil.ReadFile("file.txt")
 	check(err)
@@ -62,9 +63,10 @@ func main() {
 	str = ""
 
 	/* PRINT ALL ELEMENTS OF STRUCTURE*/
-	for i := 0; i < len(array); i++ {
+	/*for i := 0; i < len(array); i++ {
 		fmt.Println(array[i].url)
 	}
+	*/
 
 	/* PUSHING DATA TO TEMP*/
 	var answer string
@@ -84,12 +86,14 @@ func main() {
 	_, err = file2.WriteString(answer)
 	check(err)
 
-	/*THAT'S HOW USE LOG*/
-	log.Print(string(data))
-	/* log.Print === .Fatal === .Panic ?*/
-	//log.Fatal(string(data))
+}
+
+func main() {
+	/* Dont pay attention on that. It's a test */
+	ReadWriteHandler()
 
 	/* START LOCALHOST SERVER */
 	http.HandleFunc("/", handler)
+	log.Print("Handler started")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
