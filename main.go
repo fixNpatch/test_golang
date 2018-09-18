@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"io/ioutil"
 )
 
 func check(e error) {
@@ -12,13 +12,8 @@ func check(e error) {
 }
 
 func main() {
-	file, err := os.Open("file.txt")
+	dat, err := ioutil.ReadFile("file.txt")
 	check(err)
-	defer file.Close()
+	fmt.Print(string(dat))
 
-	bear := make([]byte, 5)
-	str, err := file.Read(bear) // convert content to a 'string'
-	check(err)
-
-	fmt.Println(str) // print the content as a 'string'
 }
