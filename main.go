@@ -8,6 +8,13 @@ import (
 	"os"
 )
 
+const AddForm = `
+<form method="POST" action="/add">
+URL: <input type="text" name="url">
+<input type="submit" value="Add">
+</form>
+`
+
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -18,15 +25,15 @@ type Object struct {
 	url string
 }
 
-func (obj Object) appendChar(x string) string {
-	slice := []string{obj.url}
-	slice = append(slice, x)
-	return obj.url
-}
-
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Print("HTTP Request caught")
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+	url := r.FormValue("url")
+	if url == "" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprint(w, AddForm)
+		return
+	}
+	key := "Placeholder"
+	fmt.Fprintf(w, "http://localhost:8080/%s", key)
 }
 
 func ReadWriteHandler() {
@@ -93,7 +100,7 @@ func main() {
 	ReadWriteHandler()
 
 	/* START LOCALHOST SERVER */
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/add", handler)
 	log.Print("Handler started")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

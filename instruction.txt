@@ -1,1 +1,5 @@
 https://golang.org/doc/articles/wiki/
+
+https://stackoverflow.com/questions/26348659/html-templates-in-golang
+
+https://stackoverflow.com/questions/38110875/how-to-display-html-string-as-a-web-page-using-golang-http-responsewriter
