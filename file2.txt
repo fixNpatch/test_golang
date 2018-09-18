@@ -1,0 +1,7 @@
+google.ru
+yandex.ru
+habr.com
+xakep.ru
+stackoverflow.com
+cppreference.com
+javascript.com
