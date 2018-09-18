@@ -103,6 +103,10 @@ func main() {
 	ReadWriteHandler()
 	/* START LOCALHOST SERVER */
 	http.HandleFunc("/add", handler)
-	log.Print("Handler started")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 }

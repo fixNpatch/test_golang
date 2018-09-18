@@ -30,4 +30,4 @@ body, err := ioutil.ReadAll(resp.Body)
 // ...
 
 =======================================
-a.vasilenko@r
+a.vasilenko@rainbowsoft
