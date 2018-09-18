@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -21,6 +22,10 @@ func (obj Object) appendChar(x string) string {
 	slice := []string{obj.url}
 	slice = append(slice, x)
 	return obj.url
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
 func main() {
@@ -82,6 +87,9 @@ func main() {
 	/*THAT'S HOW USE LOG*/
 	log.Print(string(data))
 	/* log.Print === .Fatal === .Panic ?*/
-	log.Fatal(string(data))
+	//log.Fatal(string(data))
 
+	/* START LOCALHOST SERVER */
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
