@@ -8,17 +8,20 @@ import (
 	"os"
 )
 
-const AddForm = `
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func AddForm() string {
+	var content string = `
 <form method="POST" action="/add">
 URL: <input type="text" name="url">
 <input type="submit" value="Add">
 </form>
 `
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
+	return content
 }
 
 type Object struct {
@@ -29,7 +32,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	url := r.FormValue("url")
 	if url == "" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		fmt.Fprint(w, AddForm)
+		fmt.Fprint(w, AddForm())
 		return
 	}
 	key := "Placeholder"
@@ -98,7 +101,6 @@ func ReadWriteHandler() {
 func main() {
 	/* Dont pay attention on that. It's a test */
 	ReadWriteHandler()
-
 	/* START LOCALHOST SERVER */
 	http.HandleFunc("/add", handler)
 	log.Print("Handler started")

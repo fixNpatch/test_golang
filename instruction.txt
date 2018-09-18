@@ -3,3 +3,31 @@ https://golang.org/doc/articles/wiki/
 https://stackoverflow.com/questions/26348659/html-templates-in-golang
 
 https://stackoverflow.com/questions/38110875/how-to-display-html-string-as-a-web-page-using-golang-http-responsewriter
+
+=======================================
+
+разные способы чтения
+
+bufio
+os.readfile
+
+
+=======================================
+завернуть в функцию :
+file, err := ioutil.ReadFile("file.txt")
+	check(err)
+	data := string(file)
+
+
+=======================================
+
+resp, err := http.Get("http://example.com/")
+if err != nil {
+	// handle error
+}
+defer resp.Body.Close()
+body, err := ioutil.ReadAll(resp.Body)
+// ...
+
+=======================================
+a.vasilenko@r
