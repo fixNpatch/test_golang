@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -77,5 +78,10 @@ func main() {
 	defer file2.Close()
 	_, err = file2.WriteString(answer)
 	check(err)
+
+	/*THAT'S HOW USE LOG*/
+	log.Print(string(data))
+	/* log.Print === .Fatal === .Panic ?*/
+	log.Fatal(string(data))
 
 }
