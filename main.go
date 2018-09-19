@@ -39,46 +39,61 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "http://localhost:8080/%s", key)
 }
 
-func ReadWriteHandler() {
-	/* READ FILE */
-	file, err := ioutil.ReadFile("file.txt")
+func ReadByIoutil(filePath string) string {
+
+	file, err := ioutil.ReadFile(filePath)
 	check(err)
 	data := string(file)
-
-	/* INIT STRUCTURE */
-	var str string
+	return data
+}
+func WriteByOs(filePath string, data string) {
+	file, err := os.Create(filePath)
+	check(err)
+	defer file.Close()
+	_, err = file.WriteString(data)
+	check(err)
+}
+func ParseData(data string) []Object {
 	var counter = 0
+	var answer string
 	var array []Object
 	var buffer Object
-
-	/* PARSE DATA TO STRUCTURE */
 	for i := 0; i < len(data); i++ {
 		switch data[i] {
 		case ';':
 			{
-				buffer.url = str
+				buffer.url = answer
 				array = append(array, buffer)
-				str = ""
+				answer = ""
 				counter++
 			}
 		case ' ':
 			{ /*continue*/
 			}
 		default:
-			str += string(data[i])
+			answer += string(data[i])
 		}
 	}
-	buffer.url = str
+
+	buffer.url = answer
 	array = append(array, buffer)
-	str = ""
+	answer = ""
 
-	/* PRINT ALL ELEMENTS OF STRUCTURE*/
-	/*for i := 0; i < len(array); i++ {
+	return array
+}
+
+func ReadWriteHandler() {
+
+	data := ReadByIoutil("file.txt")
+	array := ParseData(data)
+
+	var i = 0
+	for i < len(array) {
 		fmt.Println(array[i].url)
+		i++
 	}
-	*/
 
-	/* PUSHING DATA TO TEMP*/
+	/* stringify (not json) */
 	var answer string
 	for i := 0; i < len(data); i++ {
 		if data[i] == ';' {
@@ -90,11 +105,7 @@ func ReadWriteHandler() {
 		}
 	}
 	/* PUSHING TEMP TO NEW FILE*/
-	file2, err := os.Create("file2.txt")
-	check(err)
-	defer file2.Close()
-	_, err = file2.WriteString(answer)
-	check(err)
+	WriteByOs("file2.txt", answer)
 
 }
 

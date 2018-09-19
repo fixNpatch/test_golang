@@ -5,14 +5,18 @@ https://stackoverflow.com/questions/26348659/html-templates-in-golang
 https://stackoverflow.com/questions/38110875/how-to-display-html-string-as-a-web-page-using-golang-http-responsewriter
 
 =======================================
+NO
 
 разные способы чтения
 
 bufio
 os.readfile
+io.reader
 
 
 =======================================
+YES
+
 завернуть в функцию :
 file, err := ioutil.ReadFile("file.txt")
 	check(err)
@@ -20,6 +24,7 @@ file, err := ioutil.ReadFile("file.txt")
 
 
 =======================================
+WORKWITH
 
 resp, err := http.Get("http://example.com/")
 if err != nil {
