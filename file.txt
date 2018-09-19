@@ -1,1 +1,1 @@
-google.com; yandex.ru; xakep.ru; stackoverflow.com
+google.com; yandex.ru; habr.com; xakep.ru; stackoverflow.com

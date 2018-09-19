@@ -84,16 +84,17 @@ func ParseData(data string) []Object {
 }
 
 func SaveContent(url string) bool {
-	log.Print("Started")
+	log.Print("Started with " + url)
 	filePath := url
 	filePath = strings.Trim(filePath, ".com")
 	filePath = strings.Trim(filePath, ".ru")
 	filePath += ".html"
+	log.Print("Filepath to save: " + filePath)
 	url = "https://" + url
-	log.Print("Try to get " + url)
+	log.Print("HTTP Request at " + url)
 	resp, err := http.Get(url)
 	check(err)
-	log.Print("Got " + url)
+	log.Print("HTTP Receive from " + url)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	content := string(body)
