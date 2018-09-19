@@ -4,5 +4,3 @@ habr.com
 xakep.ru
 stackoverflow.com
 cppreference.com
-javascript.com
-helloworld.com

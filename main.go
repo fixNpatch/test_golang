@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 )
@@ -89,7 +90,11 @@ func ReadWriteHandler() {
 
 func AddForm(url string) string {
 	if url == "" {
-		url = "http://example.com/"
+		data := ReadByIoutil("file.txt")
+		array := ParseData(data)
+		url = "https://www."
+		url += array[rand.Intn(len(array))].url
+		log.Print(url)
 	}
 	resp, err := http.Get(url)
 	check(err)
@@ -104,7 +109,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	url := r.FormValue("url")
 	if url == "" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		fmt.Fprint(w, AddForm("https://yandex.ru"))
+		url = ""
+		//url = "https://yandex.ru"
+		fmt.Fprint(w, AddForm(url))
 		return
 	}
 	key := "Placeholder"
