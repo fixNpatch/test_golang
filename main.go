@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -20,6 +21,24 @@ type Object struct {
 	url string
 }
 
+func ReadByBufio(filePath string) string {
+
+	var data string
+	file, err := os.Open(filePath)
+	check(err)
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		data += scanner.Text()
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return data
+}
 func ReadByIoutil(filePath string) string {
 
 	file, err := ioutil.ReadFile(filePath)
@@ -70,7 +89,8 @@ func ParseData(data string) []Object {
 }
 func ReadWriteHandler() {
 
-	data := ReadByIoutil("file.txt")
+	//data := ReadByIoutil("file.txt")
+	data := ReadByBufio("file.txt")
 	array := ParseData(data)
 
 	var i = 0
