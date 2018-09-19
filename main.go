@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func check(e error) {
@@ -50,8 +51,14 @@ func ParseData(data string) []Object {
 		case ' ':
 			{ /*continue*/
 			}
+		case '\r':
+			{
+				break
+			}
 		default:
 			answer += string(data[i])
+			answer = strings.TrimSuffix(answer, "\n")
+			answer = strings.TrimSuffix(answer, "\r")
 		}
 	}
 
@@ -92,7 +99,7 @@ func AddForm(url string) string {
 	if url == "" {
 		data := ReadByIoutil("file.txt")
 		array := ParseData(data)
-		url = "https://www."
+		url = "https://"
 		url += array[rand.Intn(len(array))].url
 		log.Print(url)
 	}
@@ -114,15 +121,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, AddForm(url))
 		return
 	}
-	key := "Placeholder"
-	fmt.Fprintf(w, "http://localhost:8080/%s", key)
 }
 
 func main() {
 	/* Dont pay attention on that. It's a test */
 	ReadWriteHandler()
 	/* START LOCALHOST SERVER */
-	http.HandleFunc("/add", handler)
+	http.HandleFunc("/test", handler)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

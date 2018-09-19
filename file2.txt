@@ -1,6 +1,5 @@
-google.ru
+google.com
 yandex.ru
 habr.com
 xakep.ru
 stackoverflow.com
-cppreference.com
