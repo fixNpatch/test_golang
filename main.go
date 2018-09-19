@@ -14,31 +14,8 @@ func check(e error) {
 	}
 }
 
-func AddForm(url string) string {
-	if url == "" {
-		url = "http://example.com/"
-	}
-	resp, err := http.Get(url)
-	check(err)
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	content := string(body)
-	return content
-}
-
 type Object struct {
 	url string
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	url := r.FormValue("url")
-	if url == "" {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		fmt.Fprint(w, AddForm("https://yandex.ru"))
-		return
-	}
-	key := "Placeholder"
-	fmt.Fprintf(w, "http://localhost:8080/%s", key)
 }
 
 func ReadByIoutil(filePath string) string {
@@ -83,7 +60,6 @@ func ParseData(data string) []Object {
 
 	return array
 }
-
 func ReadWriteHandler() {
 
 	data := ReadByIoutil("file.txt")
@@ -109,6 +85,30 @@ func ReadWriteHandler() {
 	/* PUSHING TEMP TO NEW FILE*/
 	WriteByOs("file2.txt", answer)
 
+}
+
+func AddForm(url string) string {
+	if url == "" {
+		url = "http://example.com/"
+	}
+	resp, err := http.Get(url)
+	check(err)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	content := string(body)
+	WriteByOs("index.html", content)
+	return content
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	url := r.FormValue("url")
+	if url == "" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprint(w, AddForm("https://yandex.ru"))
+		return
+	}
+	key := "Placeholder"
+	fmt.Fprintf(w, "http://localhost:8080/%s", key)
 }
 
 func main() {
