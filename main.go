@@ -1,14 +1,12 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 )
 
 func check(e error) {
@@ -21,6 +19,7 @@ type Object struct {
 	url string
 }
 
+/*
 func ReadByBufio(filePath string) string {
 
 	var data string
@@ -38,7 +37,7 @@ func ReadByBufio(filePath string) string {
 	}
 
 	return data
-}
+}*/
 func ReadByIoutil(filePath string) string {
 
 	file, err := ioutil.ReadFile(filePath)
@@ -70,10 +69,6 @@ func ParseData(data string) []Object {
 		case ' ':
 			{ /*continue*/
 			}
-		case '\r':
-			{
-				break
-			}
 		default:
 			answer += string(data[i])
 			answer = strings.TrimSuffix(answer, "\n")
@@ -87,71 +82,38 @@ func ParseData(data string) []Object {
 
 	return array
 }
-func ReadWriteHandler() {
 
-	//data := ReadByIoutil("file.txt")
-	data := ReadByBufio("file.txt")
-	array := ParseData(data)
-
-	var i = 0
-	for i < len(array) {
-		fmt.Println(array[i].url)
-		i++
-	}
-
-	/* stringify (not json) */
-	var answer string
-	for i := 0; i < len(data); i++ {
-		if data[i] == ';' {
-			answer += "\n"
-		} else if data[i] == ' ' {
-			continue
-		} else {
-			answer += string(data[i])
-		}
-	}
-	/* PUSHING TEMP TO NEW FILE*/
-	WriteByOs("file2.txt", answer)
-
-}
-
-func AddForm(url string) string {
-	if url == "" {
-		data := ReadByIoutil("file.txt")
-		array := ParseData(data)
-		url = "https://"
-		url += array[rand.Intn(len(array))].url
-		log.Print(url)
-	}
+func SaveContent(url string) bool {
+	log.Print("Started")
+	filePath := url
+	filePath = strings.Trim(filePath, ".com")
+	filePath = strings.Trim(filePath, ".ru")
+	filePath += ".html"
+	url = "https://" + url
+	log.Print("Try to get " + url)
 	resp, err := http.Get(url)
 	check(err)
+	log.Print("Got " + url)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	content := string(body)
-	WriteByOs("index.html", content)
-	return content
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	url := r.FormValue("url")
-	if url == "" {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		url = ""
-		//url = "https://yandex.ru"
-		fmt.Fprint(w, AddForm(url))
-		return
-	}
+	WriteByOs(filePath, content)
+	log.Print("Wrote content " + url)
+	return true
 }
 
 func main() {
-	/* Dont pay attention on that. It's a test */
-	ReadWriteHandler()
-	/* START LOCALHOST SERVER */
-	http.HandleFunc("/test", handler)
+	var wg sync.WaitGroup
+	data := ReadByIoutil("file.txt")
+	array := ParseData(data)
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal(err.Error())
+	for _, element := range array {
+		wg.Add(1)
+		url := element.url
+		go func() {
+			defer wg.Done()
+			SaveContent(url)
+		}()
 	}
-
+	wg.Wait()
 }
