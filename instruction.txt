@@ -24,7 +24,7 @@ file, err := ioutil.ReadFile("file.txt")
 
 
 =======================================
-WORKWITH
+YES
 
 resp, err := http.Get("http://example.com/")
 if err != nil {

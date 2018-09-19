@@ -14,13 +14,15 @@ func check(e error) {
 	}
 }
 
-func AddForm() string {
-	var content string = `
-<form method="POST" action="/add">
-URL: <input type="text" name="url">
-<input type="submit" value="Add">
-</form>
-`
+func AddForm(url string) string {
+	if url == "" {
+		url = "http://example.com/"
+	}
+	resp, err := http.Get(url)
+	check(err)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	content := string(body)
 	return content
 }
 
@@ -32,7 +34,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	url := r.FormValue("url")
 	if url == "" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		fmt.Fprint(w, AddForm())
+		fmt.Fprint(w, AddForm("https://yandex.ru"))
 		return
 	}
 	key := "Placeholder"
