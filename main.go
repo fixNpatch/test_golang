@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
+	"time"
 )
 
 func check(e error) {
@@ -19,7 +21,6 @@ type Object struct {
 	url string
 }
 
-/*
 func ReadByBufio(filePath string) string {
 
 	var data string
@@ -37,7 +38,7 @@ func ReadByBufio(filePath string) string {
 	}
 
 	return data
-}*/
+}
 func ReadByIoutil(filePath string) string {
 
 	file, err := ioutil.ReadFile(filePath)
@@ -71,8 +72,7 @@ func ParseData(data string) []Object {
 			}
 		default:
 			answer += string(data[i])
-			answer = strings.TrimSuffix(answer, "\n")
-			answer = strings.TrimSuffix(answer, "\r")
+			answer = strings.TrimSuffix(answer, "\r\n")
 		}
 	}
 
@@ -84,10 +84,11 @@ func ParseData(data string) []Object {
 }
 
 func SaveContent(url string) bool {
+	start := time.Now()
 	log.Print("Started with " + url)
 	filePath := url
-	filePath = strings.Trim(filePath, ".com")
-	filePath = strings.Trim(filePath, ".ru")
+	filePath = strings.TrimSuffix(filePath, ".com")
+	filePath = strings.TrimSuffix(filePath, ".ru")
 	filePath += ".html"
 	log.Print("Filepath to save: " + filePath)
 	url = "https://" + url
@@ -100,6 +101,8 @@ func SaveContent(url string) bool {
 	content := string(body)
 	WriteByOs(filePath, content)
 	log.Print("Wrote content " + url)
+	finish := time.Now()
+	log.Print(finish.Sub(start))
 	return true
 }
 
