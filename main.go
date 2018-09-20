@@ -102,7 +102,7 @@ func SaveContent(url string) bool {
 	WriteByOs(filePath, content)
 	log.Print("Wrote content " + url)
 	finish := time.Now()
-	log.Print(finish.Sub(start))
+	log.Print("Current url ("+url+")request, receive and saved in ", finish.Sub(start))
 	return true
 }
 
